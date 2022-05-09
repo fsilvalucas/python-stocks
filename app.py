@@ -84,6 +84,7 @@ async def operations(user_id=Depends(auth.auth_wrapper)):
 
 @app.get('/patrimony', response_model=List[Patrimony])
 async def patrimony(user_id=Depends(auth.auth_wrapper)):
+    print(user_id)
     # Database Values
     stocks = await Stocks.get_patrimony(user_id)
     # Yfinance values

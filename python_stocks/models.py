@@ -170,7 +170,7 @@ class Stocks(Base):
     @classmethod
     async def get_patrimony(cls, user_id):
         async with session() as s:
-            query = """
+            query = f"""
             SELECT 
     ticker,
     SUM(CASE 
@@ -189,6 +189,8 @@ class Stocks(Base):
         
 FROM 
     Stocks
+WHERE 
+    user_id = {user_id}
 GROUP BY
     ticker, wallet
 HAVING
