@@ -86,7 +86,45 @@ sequenceDiagram
 
 ```
 
-/patrimony endpoint (VIEW patrimony) - GET
+/operations endpoint - GET
+``` mermaid
+sequenceDiagram
+    participant Client
+    participant API
+    participant db
+    
+    Client->>API: request Login
+        activate Client
+        activate API
+   
+   API->>API: Authenticate
+   API->>Client: response token
+   
+        deactivate Client
+        deactivate API
+   
+   Client->>API: /operations
+   
+        activate Client
+        activate API
+   
+   API->>API: Authenticate Token
+   API->>db: request operations
+        
+        activate db
+   
+   db->>API: response operations
+   
+        deactivate db
+   
+   API->>Client: reponse operations
+        
+        deactivate Client
+        deactivate API
+```
+
+
+/patrimony and /rentabilidade endpoint (VIEW patrimony and rentabilidade are almos the same process) - GET
 ``` mermaid 
 sequenceDiagram
     participant Client
