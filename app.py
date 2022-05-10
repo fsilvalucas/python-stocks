@@ -1,13 +1,22 @@
+from dotenv import load_dotenv
 import os
 from os.path import join, dirname, isfile
-from typing import List, Tuple
+
+_ENV_FILE = join(dirname(__file__), ".env")
+
+if isfile(_ENV_FILE):
+    load_dotenv(dotenv_path=_ENV_FILE)
+
+load_dotenv()
+
+from typing import List
 
 import pandas as pd
 from fastapi import FastAPI, Depends, HTTPException
 import uvicorn
 from http import HTTPStatus
 import logging
-from sentry_sdk.integrations.logging import LoggingIntegration, EventHandler
+from sentry_sdk.integrations.logging import LoggingIntegration
 from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 import sentry_sdk
 
@@ -15,12 +24,7 @@ from python_stocks.auth import AuthHandler
 from python_stocks.schemas import AuthDetails, StocksResponse, StockRequest, Patrimony, Rentability
 from python_stocks.models import Users, Stocks
 from python_stocks.finance import get_last_price, rentability
-from dotenv import load_dotenv
 
-_ENV_FILE = join(dirname(__file__), ".env")
-
-if isfile(_ENV_FILE):
-    load_dotenv(dotenv_path=_ENV_FILE)
 
 app = FastAPI()
 
@@ -35,18 +39,19 @@ logging.basicConfig(
 )
 
 # init sentry sdk
-sentry_sdk.init(
-    dsn=os.environ.get('SENTRY_DNS'),
-    integrations=[LoggingIntegration(level=logging.INFO, event_level=logging.ERROR)],
-    traces_sample_rate=1.0
-)
+if os.environ.get('SENTRY_DNS'):
+    sentry_sdk.init(
+        dsn=os.environ.get('SENTRY_DNS'),
+        integrations=[LoggingIntegration(level=logging.INFO, event_level=logging.ERROR)],
+        traces_sample_rate=1.0
+    )
 
-# Trying to add sentry middleware
-try:
-    app.add_middleware(SentryAsgiMiddleware)
-except Exception as e:
-    logging.error(f"middleware failed: {e}")
-    pass
+    # Trying to add sentry middleware
+    try:
+        app.add_middleware(SentryAsgiMiddleware)
+    except Exception as e:
+        logging.error(f"middleware failed: {e}")
+        pass
 
 
 @app.post('/register/user', status_code=201)

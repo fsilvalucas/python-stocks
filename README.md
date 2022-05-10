@@ -1,3 +1,47 @@
+# python-stocks-api
+
+- python_stocks/
+  - __ init __.py
+  - auth.py: 
+    - Authorization handlers
+    - JWT token
+  - finance.py
+    - some finance functions
+  - models.py
+    - sqlalchemy models
+    - database interface
+  - schemas.py
+    - pydantic models
+
+# env vars
+- SENTRY_DNS= [**optional**]
+- userdb=
+- passwordb=
+- hostdb=
+- database=
+
+
+# setup
+- install python ^3.8
+- install packages
+  - install poetry 1.1.13 https://python-poetry.org/ -> then poetry shell
+  - or pip install requirements.txt
+- setup database, there's a Dockerfile that I use to create a docker image of mysql, just replaces the variables by your guest. (dont forget about env vars)
+  - docker build -t {YOUR IMAGE NAME}
+  - docker run --name {NAME} -p{PORT}:{PORT} -d {YOUR IMAGE NAME}
+- set up the ambient variables (by .env or global)
+- run create.py to create the tables on database.
+- run: uvicorn app:app --reload
+
+# case of use
+there's a case of use on case.ipynb (you need jupyter to open this or google colab)
+
+# mysql dependency
+at models.py we define the database interface with mysql+aiomysql
+
+
+# Diagrams
+
 general use
 ``` mermaid 
 sequenceDiagram

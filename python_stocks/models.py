@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import asyncio
-
+import os
 from sqlalchemy import Column, String, Integer, VARCHAR, Date, Numeric, ForeignKey, Float
 from sqlalchemy import update, delete, func, case, text
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
@@ -11,10 +11,10 @@ from sqlalchemy.orm import declarative_base, sessionmaker, relationship, backref
 
 # URL_do_banco = 'sqlite+aiosqlite:///db.db'
 URL_do_banco = 'mysql+aiomysql://{0}:{1}@{2}/{3}'.format(
-    'fsilva',
-    '1234',
-    'localhost:3306',
-    'production',
+    os.environ.get('userdb'),
+    os.environ.get('passwordb'),
+    os.environ.get('hostdb'),
+    os.environ.get('database'),
 )
 
 engine = create_async_engine(URL_do_banco)
